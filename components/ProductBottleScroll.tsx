@@ -12,6 +12,8 @@ const TOTAL_FRAMES = 192;
 export default function ProductBottleScroll({ folderPath }: ProductBottleScrollProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const audioRef = useRef<HTMLAudioElement>(null);
+    const scrollTimeout = useRef<any>(null);
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ['start start', 'end end'],
@@ -86,6 +88,26 @@ export default function ProductBottleScroll({ folderPath }: ProductBottleScrollP
         const unsubscribe = scrollYProgress.onChange((latest) => {
             const frameIndex = Math.floor(latest * (TOTAL_FRAMES - 1));
             requestAnimationFrame(() => renderFrame(frameIndex));
+
+            if (audioRef.current) {
+                // Try to play audio if it's currently paused
+                if (audioRef.current.paused) {
+                    audioRef.current.play().catch((err) => {
+                        // Autoplay policy might block this until user interacts with the page
+                        console.warn('Audio auto-play blocked by browser:', err);
+                    });
+                }
+
+                // Clear any existing timeout
+                if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+
+                // Set a timeout to pause the audio when scrolling stops
+                scrollTimeout.current = setTimeout(() => {
+                    if (audioRef.current) {
+                        audioRef.current.pause();
+                    }
+                }, 150);
+            }
         });
 
         return () => {
@@ -110,6 +132,7 @@ export default function ProductBottleScroll({ folderPath }: ProductBottleScrollP
                     className="w-full h-full object-cover"
                     style={{ opacity: loaded ? 1 : 0, transition: 'opacity 1s ease' }}
                 />
+                <audio ref={audioRef} src="/sounds/bmw-m4.mp3" loop preload="auto" />
             </div>
         </div>
     );
