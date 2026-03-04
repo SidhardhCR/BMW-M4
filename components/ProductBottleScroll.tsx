@@ -59,10 +59,10 @@ export default function ProductBottleScroll({ folderPath }: ProductBottleScrollP
                 canvas.height = parent.clientHeight;
             }
 
-            // Calculate object-fit: contain logic
+            // Calculate object-fit: cover logic
             const hRatio = canvas.width / img.width;
             const vRatio = canvas.height / img.height;
-            const ratio = Math.min(hRatio, vRatio);
+            const ratio = Math.max(hRatio, vRatio);
 
             const centerShift_x = (canvas.width - img.width * ratio) / 2;
             const centerShift_y = (canvas.height - img.height * ratio) / 2;
@@ -107,7 +107,7 @@ export default function ProductBottleScroll({ folderPath }: ProductBottleScrollP
                 )}
                 <canvas
                     ref={canvasRef}
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-cover"
                     style={{ opacity: loaded ? 1 : 0, transition: 'opacity 1s ease' }}
                 />
             </div>

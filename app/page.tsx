@@ -122,9 +122,7 @@ export default function Home() {
 
                                 {/* Simulated Image Box since user adds them manually */}
                                 <div className="w-full h-full flex items-center justify-center bg-black/40 p-8 text-center relative z-20">
-                                    <p className="text-white/30 uppercase tracking-widest text-sm border border-white/10 p-4 rounded-xl backdrop-blur-md">
-                                        [ User Context: {currentProduct.detailsSection.imageAlt} ]
-                                    </p>
+                                    <img src='/side_image/bmw_green_m4_competition_2020_4k_hd_cars.jpg' alt="" />
                                 </div>
                             </div>
                         </motion.div>
